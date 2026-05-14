@@ -707,17 +707,19 @@ function renderScorecard(idx) {
     <textarea id="tasting-notes" placeholder="Aromas, palate impressions, any faults…" rows="3"></textarea>
   </div>`;
 
-  html += `<button class="btn-primary btn-gold" onclick="window.submitWine()">Submit score for ${wine.label}</button>`;
+  html += `<button class="btn-primary btn-gold" id="submit-btn" onclick="window.submitWine()" disabled style="opacity:0.4">Score all criteria to submit</button>`;
   html += '<div style="height:32px"></div>';
 
   content.innerHTML = html;
   updateTotals();
+  checkSubmitReady();
 }
 
 window.handleSlider = function(key, val) {
   sliderValues[key] = parseFloat(val);
   document.getElementById('val-' + key).innerHTML = fmt(parseFloat(val)) + '<span class="denom">/' + getCritMax(key) + '</span>';
   updateTotals();
+  checkSubmitReady();
 };
 
 function getCritMax(key) {
@@ -764,7 +766,22 @@ function updateTotals() {
   badge.style.color = col;
 }
 
-window.submitWine = async function() {
+function checkSubmitReady() {
+  const allKeys = CRITERIA.flatMap(sec => sec.items.map(item => item.key));
+  const unscored = allKeys.filter(k => !sliderValues[k] || sliderValues[k] === 0);
+  const btn = document.getElementById('submit-btn');
+  if (!btn) return;
+  const wine = WINES[currentWineIdx];
+  if (unscored.length === 0) {
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    btn.textContent = 'Submit score for ' + wine.label;
+  } else {
+    btn.disabled = true;
+    btn.style.opacity = '0.4';
+    btn.textContent = unscored.length + ' criterion' + (unscored.length > 1 ? 'a' : '') + ' still to score';
+  }
+}
   const wine = WINES[currentWineIdx];
   const grand = CRITERIA.reduce((a, sec) => a + sec.items.reduce((b, item) => b + (sliderValues[item.key] || 0), 0), 0);
   const entry = {
