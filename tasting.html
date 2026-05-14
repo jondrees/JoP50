@@ -816,16 +816,24 @@ function checkSubmitReady() {
 
 // ---- INIT ----
 async function init() {
+  const grid = document.getElementById('name-grid');
+  if (grid) grid.innerHTML = '<div style="grid-column:1/-1;font-size:13px;color:var(--ink-faint);padding:8px 0">Loading…</div>';
+
   if (currentTaster) {
-    // Verify they're still registered
-    const snap = await get(ref(db, 'tasters/' + currentTaster));
-    if (snap.val()) {
-      await initScoringScreen();
-      return;
-    } else {
-      localStorage.removeItem('jop50_taster');
-      currentTaster = null;
+    try {
+      const snap = await Promise.race([
+        get(ref(db, 'tasters/' + currentTaster)),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 5000))
+      ]);
+      if (snap.val()) {
+        await initScoringScreen();
+        return;
+      }
+    } catch(e) {
+      // timeout or error — fall through to name screen
     }
+    localStorage.removeItem('jop50_taster');
+    currentTaster = null;
   }
   await initNameScreen();
 }
