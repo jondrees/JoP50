@@ -115,7 +115,7 @@ body { overflow-x: hidden; }
 }
 .name-btn.taken {
   opacity: 0.35;
-  pointer-events: none;
+  /* tappable for reclaim */
 }
 .name-btn .taken-label {
   display: block;
@@ -584,15 +584,13 @@ async function initNameScreen() {
     const taken = takenNames[name] && takenNames[name] !== currentTaster;
     const btn = document.createElement('button');
     btn.className = 'name-btn' + (taken ? ' taken' : '');
-    btn.innerHTML = name + (taken ? '<span class="taken-label">seated</span>' : '');
-    if (!taken) {
-      btn.onclick = () => {
-        document.querySelectorAll('.name-btn').forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected');
-        selectedName = name;
-        document.getElementById('confirm-name-btn').disabled = false;
-      };
-    }
+    btn.innerHTML = name + (taken ? '<span class="taken-label">seated — tap to reclaim</span>' : '');
+    btn.onclick = () => {
+      document.querySelectorAll('.name-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedName = name;
+      document.getElementById('confirm-name-btn').disabled = false;
+    };
     grid.appendChild(btn);
   });
 
