@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JoP 50th — Host View</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #F7F3ED;
+  --parchment: #EFE8DC;
+  --gold: #B8933F;
+  --gold-light: #D4AF6A;
+  --ink: #1C1610;
+  --ink-muted: #6B5E4E;
+  --ink-faint: #A89880;
+  --border: rgba(184,147,63,0.25);
+  --border-strong: rgba(184,147,63,0.5);
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--cream); color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: 14px; }
+
+.app-header {
+  background: var(--ink);
+  padding: 20px 24px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.app-header h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--cream);
+}
+.app-header .sub { font-size: 11px; color: var(--ink-faint); letter-spacing: 0.08em; text-transform: uppercase; }
+.host-badge {
+  background: rgba(184,147,63,0.2);
+  border: 0.5px solid var(--border-strong);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 11px;
+  color: var(--gold-light);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.tab-bar {
+  display: flex;
+  background: var(--ink);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding: 0 24px;
+  gap: 0;
+}
+.tab {
+  flex: 1;
+  padding: 12px 8px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-faint);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+  letter-spacing: 0.03em;
+}
+.tab.active { color: var(--gold-light); border-bottom-color: var(--gold); }
+
+.page { display: none; padding: 20px 20px; max-width: 800px; margin: 0 auto; }
+.page.active { display: block; }
+
+/* Stats strip */
+.stats-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.stat-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  text-align: center;
+}
+.stat-val { font-family: 'Cormorant Garamond', serif; font-size: 28px; color: var(--ink); line-height: 1; }
+.stat-label { font-size: 11px; color: var(--ink-faint); margin-top: 3px; }
+
+/* Leaderboard */
+.lb-header {
+  display: grid;
+  grid-template-columns: 32px 1fr 80px 60px 60px;
+  gap: 8px;
+  padding: 6px 12px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  border-bottom: 1px solid var(--border-strong);
+  margin-bottom: 4px;
+}
+.lb-row {
+  display: grid;
+  grid-template-columns: 32px 1fr 80px 60px 60px;
+  gap: 8px;
+  padding: 10px 12px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 6px;
+  align-items: center;
+}
+.rank-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  color: var(--ink-faint);
+  text-align: center;
+}
+.rank-num.gold { color: var(--gold); font-weight: 600; }
+.rank-num.silver { color: #888; }
+.rank-num.bronze { color: #a0522d; }
+.wine-col {}
+.wine-col .wine-id { font-size: 12px; font-weight: 500; color: var(--ink); }
+.wine-col .wine-bottle { font-size: 11px; color: var(--ink-faint); margin-top: 1px; font-style: italic; }
+.wine-col .origin-tag {
+  display: inline-block;
+  font-size: 10px;
+  padding: 1px 7px;
+  border-radius: 10px;
+  margin-top: 3px;
+  font-style: normal;
+}
+.taster-count { font-size: 12px; color: var(--ink-muted); text-align: center; }
+.mean-score {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 500;
+  text-align: right;
+}
+.bar-col { display: flex; align-items: center; }
+.mini-bar { flex: 1; height: 4px; background: var(--parchment); border-radius: 2px; overflow: hidden; }
+.mini-bar-fill { height: 100%; background: var(--gold); border-radius: 2px; }
+
+/* Detail view */
+.detail-wine-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 14px;
+  overflow: hidden;
+}
+.dwc-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: var(--parchment);
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+.dwc-title { font-size: 14px; font-weight: 500; }
+.dwc-meta { font-size: 12px; color: var(--ink-muted); }
+.dwc-body { display: none; }
+.dwc-body.open { display: block; }
+
+.taster-score-row {
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 14px;
+  border-bottom: 1px solid rgba(184,147,63,0.08);
+  font-size: 12px;
+}
+.taster-score-row:last-child { border-bottom: none; }
+.ts-name { font-weight: 500; }
+.ts-breakdown { color: var(--ink-faint); font-size: 11px; }
+.ts-total { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 500; }
+
+/* Reveal view */
+.reveal-intro { font-size: 13px; color: var(--ink-muted); margin-bottom: 16px; line-height: 1.5; }
+.reveal-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.reveal-card-head {
+  padding: 10px 14px;
+  background: var(--parchment);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.reveal-card-head .rc-wine { font-size: 13px; font-weight: 500; }
+.reveal-card-body { padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; }
+.field-label { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 4px; }
+input[type=text] {
+  width: 100%;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: 9px 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: var(--ink);
+  background: var(--cream);
+  outline: none;
+}
+input[type=text]:focus { border-color: var(--gold); background: white; }
+.origin-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+.origin-btn {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border-strong);
+  background: white;
+  font-size: 12px;
+  color: var(--ink-muted);
+  cursor: pointer;
+  transition: all 0.1s;
+}
+.origin-btn.active { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+.save-all-btn {
+  width: 100%;
+  background: var(--gold);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  padding: 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 8px;
+  letter-spacing: 0.02em;
+}
+.save-all-btn:active { opacity: 0.85; }
+
+/* Refresh btn */
+.refresh-btn {
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: 6px 14px;
+  font-size: 12px;
+  color: var(--ink-muted);
+  cursor: pointer;
+  margin-bottom: 16px;
+}
+.refresh-btn:active { background: var(--parchment); }
+
+/* Origin colour tags */
+.tag-burgundy { background: #F3E8F5; color: #6B2F7A; }
+.tag-california { background: #FFF3E0; color: #9C5700; }
+.tag-bordeaux { background: #FCE8E8; color: #8B1A1A; }
+.tag-champagne { background: #FFFDE7; color: #8B7A00; }
+.tag-other { background: #EEF2F5; color: #3A4F5C; }
+
+.empty-state { padding: 32px; text-align: center; color: var(--ink-faint); font-size: 13px; }
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div>
+    <div class="sub">Host</div>
+    <h1>Judgement of Paris — 50th</h1>
+  </div>
+  <div class="host-badge">Host</div>
+</div>
+
+<div class="tab-bar">
+  <div class="tab active" onclick="showTab('summary')" id="tab-summary">Summary</div>
+  <div class="tab" onclick="showTab('detail')" id="tab-detail">Detail</div>
+  <div class="tab" onclick="showTab('reveal')" id="tab-reveal">Wines</div>
+</div>
+
+<div class="page active" id="page-summary">
+  <div class="stats-strip" id="stats-strip">
+    <div class="stat-card"><div class="stat-val" id="stat-submissions">—</div><div class="stat-label">Submissions</div></div>
+    <div class="stat-card"><div class="stat-val" id="stat-wines">—</div><div class="stat-label">Wines scored</div></div>
+    <div class="stat-card"><div class="stat-val" id="stat-tasters">—</div><div class="stat-label">Tasters active</div></div>
+  </div>
+  <button class="refresh-btn" onclick="loadAll()">↻ Refresh scores</button>
+  <div class="lb-header">
+    <div>#</div><div>Wine</div><div style="text-align:center">Tasters</div><div style="text-align:right">Mean</div><div></div>
+  </div>
+  <div id="leaderboard"></div>
+</div>
+
+<div class="page" id="page-detail">
+  <button class="refresh-btn" onclick="loadAll()">↻ Refresh scores</button>
+  <div id="detail-content"></div>
+</div>
+
+<div class="page" id="page-reveal">
+  <p class="reveal-intro">Enter bottle identities and origins as wines are revealed. Save when ready — these appear in the summary and detail views.</p>
+  <div id="reveal-content"></div>
+  <button class="save-all-btn" onclick="saveWineInfo()">Save all wine details</button>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDhh03a-fRScVWApfqW9TRaXW_4WBPvUCI",
+  authDomain: "jop50-6aa56.firebaseapp.com",
+  databaseURL: "https://jop50-6aa56-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "jop50-6aa56",
+  storageBucket: "jop50-6aa56.firebasestorage.app",
+  messagingSenderId: "792630536770",
+  appId: "1:792630536770:web:924c20adf2d0800362dbdb"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+const WINES = [
+  {id:'S1',label:'Sparkling 1',category:'Sparkling'},
+  {id:'S2',label:'Sparkling 2',category:'Sparkling'},
+  {id:'W1',label:'White 1',category:'White'},
+  {id:'W2',label:'White 2',category:'White'},
+  {id:'W3',label:'White 3',category:'White'},
+  {id:'W4',label:'White 4',category:'White'},
+  {id:'W5',label:'White 5',category:'White'},
+  {id:'W6',label:'White 6',category:'White'},
+  {id:'R1',label:'Red 1',category:'Red'},
+  {id:'R2',label:'Red 2',category:'Red'},
+  {id:'R3',label:'Red 3',category:'Red'},
+  {id:'R4',label:'Red 4',category:'Red'},
+  {id:'R5',label:'Red 5',category:'Red'},
+  {id:'R6',label:'Red 6',category:'Red'},
+  {id:'Sw1',label:'Sweet 1',category:'Sweet'},
+  {id:'Sw2',label:'Sweet 2',category:'Sweet'},
+];
+
+const ORIGINS = ['Burgundy','California','Bordeaux','Champagne','Other'];
+
+let allScores = {};
+let wineInfo = {};
+
+function fmt(n) {
+  const r = Math.round(n * 2) / 2;
+  return r % 1 === 0 ? r.toString() : r.toFixed(1);
+}
+
+function originClass(o) {
+  if (!o) return '';
+  return 'tag-' + o.toLowerCase();
+}
+
+window.showTab = function(t) {
+  ['summary','detail','reveal'].forEach(x => {
+    document.getElementById('page-' + x).classList.toggle('active', x === t);
+    document.getElementById('tab-' + x).classList.toggle('active', x === t);
+  });
+};
+
+window.loadAll = async function() {
+  const [scoresSnap, infoSnap] = await Promise.all([
+    get(ref(db, 'scores')),
+    get(ref(db, 'wineinfo'))
+  ]);
+  allScores = scoresSnap.val() || {};
+  wineInfo = infoSnap.val() || {};
+  renderSummary();
+  renderDetail();
+  renderReveal();
+};
+
+function aggregateWines() {
+  const byWine = {};
+  WINES.forEach(w => { byWine[w.id] = { wine: w, entries: [], total: 0 }; });
+  Object.values(allScores).forEach(tasterScores => {
+    Object.values(tasterScores).forEach(entry => {
+      if (byWine[entry.wine]) {
+        byWine[entry.wine].entries.push(entry);
+        byWine[entry.wine].total += entry.total;
+      }
+    });
+  });
+  return byWine;
+}
+
+function renderSummary() {
+  const byWine = aggregateWines();
+  let totalSubs = 0, winesScored = 0;
+  const tasterSet = new Set();
+  Object.entries(allScores).forEach(([t, wines]) => {
+    tasterSet.add(t);
+    totalSubs += Object.keys(wines).length;
+  });
+  Object.values(byWine).forEach(w => { if (w.entries.length > 0) winesScored++; });
+  document.getElementById('stat-submissions').textContent = totalSubs;
+  document.getElementById('stat-wines').textContent = winesScored;
+  document.getElementById('stat-tasters').textContent = tasterSet.size;
+
+  const wines = WINES.map(w => byWine[w.id]).filter(w => w.entries.length > 0);
+  wines.sort((a, b) => (b.total / b.entries.length) - (a.total / a.entries.length));
+
+  if (wines.length === 0) {
+    document.getElementById('leaderboard').innerHTML = '<div class="empty-state">No scores submitted yet.</div>';
+    return;
+  }
+
+  let html = '';
+  wines.forEach((w, i) => {
+    const mean = w.total / w.entries.length;
+    const info = wineInfo[w.wine.id] || {};
+    const rankClass = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : '';
+    const originTag = info.origin ? `<span class="origin-tag ${originClass(info.origin)}">${info.origin}</span>` : '';
+    html += `<div class="lb-row">
+      <div class="rank-num ${rankClass}">${i+1}</div>
+      <div class="wine-col">
+        <div class="wine-id">${w.wine.label}</div>
+        ${info.bottle ? `<div class="wine-bottle">${info.bottle}</div>` : ''}
+        ${originTag}
+      </div>
+      <div class="taster-count">${w.entries.length}</div>
+      <div class="mean-score">${fmt(mean)}</div>
+      <div class="bar-col"><div class="mini-bar"><div class="mini-bar-fill" style="width:${(mean/20*100).toFixed(1)}%"></div></div></div>
+    </div>`;
+  });
+  document.getElementById('leaderboard').innerHTML = html;
+}
+
+function renderDetail() {
+  const byWine = aggregateWines();
+  const wines = WINES.map(w => byWine[w.id]).filter(w => w.entries.length > 0);
+  if (wines.length === 0) {
+    document.getElementById('detail-content').innerHTML = '<div class="empty-state">No scores submitted yet.</div>';
+    return;
+  }
+  let html = '';
+  wines.forEach(w => {
+    const info = wineInfo[w.wine.id] || {};
+    const mean = w.entries.length ? w.total / w.entries.length : 0;
+    const title = info.bottle ? `${w.wine.label} · ${info.bottle}` : w.wine.label;
+    html += `<div class="detail-wine-card">
+      <div class="dwc-head" onclick="this.nextElementSibling.classList.toggle('open')">
+        <div class="dwc-title">${title}</div>
+        <div class="dwc-meta">mean ${fmt(mean)}/20 · ${w.entries.length} taster${w.entries.length!==1?'s':''}</div>
+      </div>
+      <div class="dwc-body">`;
+    w.entries.sort((a,b) => b.total - a.total).forEach(e => {
+      const s = e.scores || {};
+      const ap = fmt(s.appearance_clarity||0);
+      const ns = fmt((s.nose_intensity||0)+(s.nose_character||0));
+      const pl = fmt((s.palate_structure||0)+(s.palate_fruit||0)+(s.palate_texture||0)+(s.palate_finish||0));
+      const ov = fmt((s.overall_balance||0)+(s.overall_impression||0));
+      html += `<div class="taster-score-row">
+        <div class="ts-name">${e.taster}</div>
+        <div class="ts-breakdown">App ${ap} · Nose ${ns} · Palate ${pl} · Overall ${ov}${e.notes?'<br><em>'+e.notes.substring(0,60)+(e.notes.length>60?'…':'')+'</em>':''}</div>
+        <div class="ts-total">${fmt(e.total)}</div>
+      </div>`;
+    });
+    html += '</div></div>';
+  });
+  document.getElementById('detail-content').innerHTML = html;
+}
+
+function renderReveal() {
+  let html = '';
+  WINES.forEach(w => {
+    const info = wineInfo[w.id] || {};
+    html += `<div class="reveal-card">
+      <div class="reveal-card-head"><span class="rc-wine">${w.label}</span><span style="font-size:11px;color:var(--ink-faint)">${w.category}</span></div>
+      <div class="reveal-card-body">
+        <div>
+          <div class="field-label">Bottle identity</div>
+          <input type="text" id="bottle-${w.id}" placeholder="Producer, wine, vintage" value="${info.bottle||''}" />
+        </div>
+        <div>
+          <div class="field-label">Origin</div>
+          <div class="origin-btns" id="origin-${w.id}">`;
+    ORIGINS.forEach(o => {
+      const active = info.origin === o ? ' active' : '';
+      html += `<button class="origin-btn${active}" onclick="selectOrigin('${w.id}','${o}',this)">${o}</button>`;
+    });
+    html += `</div></div></div></div>`;
+  });
+  document.getElementById('reveal-content').innerHTML = html;
+}
+
+window.selectOrigin = function(wineId, origin, btn) {
+  document.querySelectorAll(`#origin-${wineId} .origin-btn`).forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (!wineInfo[wineId]) wineInfo[wineId] = {};
+  wineInfo[wineId].origin = origin;
+};
+
+window.saveWineInfo = async function() {
+  WINES.forEach(w => {
+    const bottleEl = document.getElementById('bottle-' + w.id);
+    if (bottleEl) {
+      if (!wineInfo[w.id]) wineInfo[w.id] = {};
+      wineInfo[w.id].bottle = bottleEl.value;
+    }
+  });
+  await set(ref(db, 'wineinfo'), wineInfo);
+  alert('Wine details saved.');
+  renderSummary();
+  renderDetail();
+};
+
+loadAll();
+</script>
+</body>
+</html>
