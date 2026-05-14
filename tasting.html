@@ -572,9 +572,13 @@ function showScreen(id) {
 // ---- NAME SELECTION ----
 
 async function initNameScreen() {
-  const takenRef = ref(db, 'tasters');
-  const snap = await get(takenRef);
-  takenNames = snap.val() || {};
+  try {
+    const takenRef = ref(db, 'tasters');
+    const snap = await get(takenRef);
+    takenNames = snap.val() || {};
+  } catch(e) {
+    takenNames = {};
+  }
 
   const grid = document.getElementById('name-grid');
   grid.innerHTML = '';
