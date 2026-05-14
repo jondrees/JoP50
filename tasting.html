@@ -413,6 +413,7 @@ let currentTaster = localStorage.getItem('jop50_taster') || null;
 let currentWineIdx = 0;
 let submittedWines = {};
 let sliderValues = {};
+let touchedSliders = new Set();
 
 function fmt(n) {
   const r = Math.round(n * 2) / 2;
@@ -499,6 +500,7 @@ function renderScorecard(idx) {
   document.getElementById('progress-fill').style.width = (scored / 16 * 100) + '%';
 
   sliderValues = {};
+  touchedSliders = new Set();
   CRITERIA.forEach(sec => sec.items.forEach(item => sliderValues[item.key] = 0));
 
   const content = document.getElementById('scoring-content');
@@ -558,6 +560,7 @@ function renderScorecard(idx) {
 
 window.handleSlider = function(key, val) {
   sliderValues[key] = parseFloat(val);
+  touchedSliders.add(key);
   document.getElementById('val-' + key).innerHTML = fmt(parseFloat(val)) + '<span class="denom">/' + getCritMax(key) + '</span>';
   updateTotals();
   checkSubmitReady();
@@ -570,7 +573,7 @@ function getCritMax(key) {
 
 function checkSubmitReady() {
   const allKeys = CRITERIA.flatMap(sec => sec.items.map(item => item.key));
-  const unscored = allKeys.filter(k => !sliderValues[k] || sliderValues[k] === 0);
+  const unscored = allKeys.filter(k => !touchedSliders.has(k));
   const btn = document.getElementById('submit-btn');
   if (!btn) return;
   if (unscored.length === 0) {
