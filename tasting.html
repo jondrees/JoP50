@@ -9,10 +9,7 @@
 <style>
 :root {
   --navy:       #1A2340;
-  --navy-mid:   #243058;
   --ivory:      #F5F0E8;
-  --ivory-mid:  #EDE5D6;
-  --ivory-dk:   #E0D5C0;
   --ink:        #1A1210;
   --ink-muted:  #5C4A3A;
   --ink-faint:  #9C8870;
@@ -20,162 +17,188 @@
   --border-strong: rgba(160,123,58,0.4);
   --radius:     10px;
   --radius-sm:  7px;
-
-  /* Category accent vars — overridden per category */
   --cat-accent:    #6B1F2A;
   --cat-accent-lt: #8C2D3A;
   --cat-brass:     #A07B3A;
   --cat-brass-lt:  #C49A4E;
-  --cat-header-bg: #1A2340;
+  --cat-header-bg: #12161F;
   --cat-btn-sel:   #6B1F2A;
 }
-
-/* ── Category themes ── */
-body.cat-sparkling {
-  --cat-accent:    #3A4A5C;
-  --cat-accent-lt: #4E6070;
-  --cat-brass:     #8A9BAA;
-  --cat-brass-lt:  #B0C4D0;
-  --cat-header-bg: #2A3A4C;
-  --cat-btn-sel:   #3A4A5C;
-}
-body.cat-white {
-  --cat-accent:    #7A6020;
-  --cat-accent-lt: #9A7C2A;
-  --cat-brass:     #A07B3A;
-  --cat-brass-lt:  #C9A84C;
-  --cat-header-bg: #2A2010;
-  --cat-btn-sel:   #7A6020;
-}
-body.cat-red {
-  --cat-accent:    #6B1F2A;
-  --cat-accent-lt: #8C2D3A;
-  --cat-brass:     #A07B3A;
-  --cat-brass-lt:  #C49A4E;
-  --cat-header-bg: #1A0A0E;
-  --cat-btn-sel:   #6B1F2A;
-}
-body.cat-sweet {
-  --cat-accent:    #7A4A10;
-  --cat-accent-lt: #9A6020;
-  --cat-brass:     #B08030;
-  --cat-brass-lt:  #D4A84E;
-  --cat-header-bg: #2A1A08;
-  --cat-btn-sel:   #7A4A10;
-}
+body.cat-sparkling { --cat-accent:#3A4A5C; --cat-accent-lt:#4E6070; --cat-brass:#7A8FA0; --cat-brass-lt:#A8C0D0; --cat-header-bg:#0E1520; --cat-btn-sel:#3A4A5C; }
+body.cat-white     { --cat-accent:#7A6020; --cat-accent-lt:#9A7C2A; --cat-brass:#A07B3A; --cat-brass-lt:#C9A84C; --cat-header-bg:#1A1608; --cat-btn-sel:#7A6020; }
+body.cat-red       { --cat-accent:#6B1F2A; --cat-accent-lt:#8C2D3A; --cat-brass:#A07B3A; --cat-brass-lt:#C49A4E; --cat-header-bg:#120608; --cat-btn-sel:#6B1F2A; }
+body.cat-sweet     { --cat-accent:#7A4A10; --cat-accent-lt:#9A6020; --cat-brass:#B08030; --cat-brass-lt:#D4A84E; --cat-header-bg:#180E04; --cat-btn-sel:#7A4A10; }
 
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html, body { height: 100%; background: var(--ivory); color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: 15px; }
-body { overflow-x: hidden; transition: background 0.6s ease; }
+html, body { height: 100%; color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: 15px; }
+body { overflow-x: hidden; transition: background 0.6s ease; background: var(--ivory); }
 
 .screen { display: none; min-height: 100vh; flex-direction: column; }
 .screen.active { display: flex; }
 
-/* ── App header ── */
+/* ── Welcome screen — full bleed photo ── */
+#screen-name {
+  position: relative;
+  min-height: 100vh;
+}
+.name-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+.name-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  filter: grayscale(15%) contrast(1.05);
+}
+.name-bg-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(12,16,28,0.55) 0%,
+    rgba(12,16,28,0.72) 40%,
+    rgba(12,16,28,0.92) 100%
+  );
+}
+.name-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 0;
+}
+.name-top {
+  padding: 52px 24px 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-bottom: 28px;
+}
+.name-eyebrow {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--cat-brass-lt);
+  margin-bottom: 10px;
+}
+.name-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 42px;
+  font-weight: 600;
+  color: var(--ivory);
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+  margin-bottom: 6px;
+}
+.name-tagline {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 18px;
+  color: rgba(245,240,232,0.65);
+  margin-bottom: 28px;
+  line-height: 1.3;
+}
+.name-rule {
+  height: 1px;
+  background: rgba(196,154,78,0.35);
+  margin-bottom: 24px;
+}
+.name-prompt {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(245,240,232,0.5);
+  margin-bottom: 12px;
+}
+.name-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.name-btn {
+  background: rgba(245,240,232,0.08);
+  border: 1px solid rgba(196,154,78,0.3);
+  border-radius: var(--radius);
+  padding: 15px 10px;
+  text-align: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 19px;
+  font-weight: 500;
+  color: rgba(245,240,232,0.85);
+  cursor: pointer;
+  transition: all 0.15s;
+  backdrop-filter: blur(4px);
+}
+.name-btn:active { transform: scale(0.97); }
+.name-btn.selected {
+  background: var(--cat-accent);
+  border-color: var(--cat-accent);
+  color: var(--ivory);
+}
+.name-btn.taken { opacity: 0.35; }
+.name-btn .taken-label { display: block; font-family: 'DM Sans', sans-serif; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(245,240,232,0.4); margin-top: 3px; }
+.name-btn.selected .taken-label { color: var(--cat-brass-lt); }
+
+.btn-begin {
+  width: 100%;
+  background: var(--cat-accent);
+  color: var(--ivory);
+  border: none;
+  border-radius: var(--radius);
+  padding: 16px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.15s, background 0.4s ease;
+  letter-spacing: 0.03em;
+  margin-bottom: 32px;
+}
+.btn-begin:disabled { opacity: 0.3; cursor: default; }
+.btn-begin:active:not(:disabled) { opacity: 0.8; }
+
+/* ── Scoring screen header ── */
 .app-header {
   background: var(--cat-header-bg);
-  padding: 18px 20px 14px;
+  padding: 16px 20px 13px;
   text-align: center;
   flex-shrink: 0;
   border-bottom: 2px solid var(--cat-accent);
   transition: background 0.6s ease, border-color 0.6s ease;
 }
-.app-header .eyebrow { font-size: 9px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--cat-brass-lt); margin-bottom: 6px; transition: color 0.6s ease; }
-.app-header h1 { font-family: 'Cormorant Garamond', serif; font-size: 23px; font-weight: 600; color: var(--ivory); line-height: 1.15; letter-spacing: 0.02em; }
-.app-header .sub { font-family: 'Cormorant Garamond', serif; font-size: 13px; font-style: italic; color: rgba(245,240,232,0.5); margin-top: 4px; }
-.taster-chip { display: inline-flex; align-items: center; gap: 6px; background: rgba(0,0,0,0.25); border: 0.5px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 4px 12px 4px 8px; margin-top: 10px; font-size: 12px; color: var(--cat-brass-lt); letter-spacing: 0.03em; transition: color 0.6s ease; }
+.app-header .eyebrow { font-size: 9px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--cat-brass-lt); margin-bottom: 5px; transition: color 0.6s ease; }
+.app-header h1 { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; color: var(--ivory); line-height: 1.15; }
+.taster-chip { display: inline-flex; align-items: center; gap: 6px; background: rgba(0,0,0,0.3); border: 0.5px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 4px 12px 4px 8px; margin-top: 8px; font-size: 12px; color: var(--cat-brass-lt); transition: color 0.6s ease; }
 .taster-chip .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--cat-accent-lt); transition: background 0.6s ease; }
 
-/* ── Welcome screen with Spurrier photo ── */
-.welcome-hero {
-  position: relative;
-  height: 220px;
-  overflow: hidden;
-  flex-shrink: 0;
-}
-.welcome-hero img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 20%;
-  filter: grayscale(20%) contrast(1.05);
-}
-.welcome-hero-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, rgba(26,35,64,0.3) 0%, rgba(26,35,64,0.85) 100%);
-}
-.welcome-hero-text {
-  position: absolute;
-  bottom: 16px;
-  left: 20px;
-  right: 20px;
-}
-.welcome-hero-text .quote {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  font-size: 14px;
-  color: rgba(245,240,232,0.8);
-  line-height: 1.5;
-  margin-bottom: 4px;
-}
-.welcome-hero-text .attribution {
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--cat-brass-lt);
-}
-
-.content { flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 30px; }
-
-.welcome-title { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 600; color: var(--navy); margin-bottom: 6px; }
-.welcome-sub { font-size: 13px; color: var(--ink-muted); margin-bottom: 24px; line-height: 1.6; }
-
-.name-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-.name-btn { background: white; border: 1px solid var(--border-strong); border-radius: var(--radius); padding: 16px 10px; text-align: center; font-family: 'Cormorant Garamond', serif; font-size: 19px; font-weight: 500; color: var(--navy); cursor: pointer; transition: all 0.15s; }
-.name-btn:active { transform: scale(0.97); }
-.name-btn.selected { background: var(--navy); border-color: var(--navy); color: var(--ivory); }
-.name-btn.taken { opacity: 0.45; }
-.name-btn .taken-label { display: block; font-family: 'DM Sans', sans-serif; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); margin-top: 3px; }
-.name-btn.selected .taken-label { color: var(--cat-brass-lt); }
-
-.btn-primary { width: 100%; background: var(--navy); color: var(--ivory); border: none; border-radius: var(--radius); padding: 15px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500; cursor: pointer; transition: opacity 0.15s; letter-spacing: 0.03em; }
-.btn-primary:disabled { opacity: 0.3; cursor: default; }
-.btn-primary:active:not(:disabled) { opacity: 0.8; }
-
-/* ── Progress ── */
-.progress-bar-wrap { background: rgba(0,0,0,0.2); height: 3px; flex-shrink: 0; }
+.progress-bar-wrap { background: rgba(0,0,0,0.25); height: 3px; flex-shrink: 0; }
 .progress-bar-fill { height: 100%; background: var(--cat-brass-lt); transition: width 0.4s ease, background 0.6s ease; }
 
-/* ── Wine nav ── */
-.wine-nav { display: flex; gap: 6px; overflow-x: auto; padding: 11px 18px; flex-shrink: 0; scrollbar-width: none; background: var(--cat-header-bg); border-bottom: 1px solid rgba(255,255,255,0.06); transition: background 0.6s ease; }
+.wine-nav { display: flex; gap: 5px; overflow-x: auto; padding: 10px 16px; flex-shrink: 0; scrollbar-width: none; background: var(--cat-header-bg); border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.6s ease; }
 .wine-nav::-webkit-scrollbar { display: none; }
-.wine-pill { flex-shrink: 0; padding: 5px 11px; border-radius: 20px; font-size: 11px; font-weight: 500; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.05); color: rgba(245,240,232,0.45); white-space: nowrap; }
+.wine-pill { flex-shrink: 0; padding: 5px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.04); color: rgba(245,240,232,0.4); white-space: nowrap; }
 .wine-pill.current { background: var(--cat-accent); border-color: var(--cat-accent); color: var(--ivory); transition: background 0.4s ease; }
-.wine-pill.done { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.15); color: rgba(245,240,232,0.4); }
+.wine-pill.done { background: rgba(255,255,255,0.07); color: rgba(245,240,232,0.35); }
 .wine-pill.done::after { content: ' ✓'; }
 
-/* ── Category banner ── */
-.cat-banner {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 16px;
-  margin-bottom: 14px;
-  border-radius: var(--radius-sm);
-  background: var(--cat-accent);
-  transition: background 0.6s ease;
-}
-.cat-banner-label { font-size: 10px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(245,240,232,0.7); }
+.content-scoring { flex: 1; overflow-y: auto; padding: 14px 16px; padding-bottom: 110px; }
+
+.cat-banner { display: flex; align-items: center; padding: 10px 14px; margin-bottom: 12px; border-radius: var(--radius-sm); background: var(--cat-accent); transition: background 0.6s ease; }
+.cat-banner-label { font-size: 9px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(245,240,232,0.6); margin-bottom: 2px; }
 .cat-banner-name { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: var(--ivory); }
-.cat-banner-icon { font-size: 20px; margin-left: auto; }
+.cat-banner-icon { font-size: 22px; margin-left: auto; }
 
-.content-scoring { flex: 1; overflow-y: auto; padding: 16px 18px; padding-bottom: 110px; }
-
-/* ── Score sections ── */
-.score-section { background: white; border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(26,35,64,0.05); }
-.score-section-head { display: flex; justify-content: space-between; align-items: center; padding: 9px 13px; background: var(--cat-header-bg); border-bottom: 1px solid rgba(255,255,255,0.06); transition: background 0.6s ease; }
-.s-title { font-size: 10px; font-weight: 500; color: rgba(245,240,232,0.85); letter-spacing: 0.1em; text-transform: uppercase; }
+.score-section { background: white; border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 9px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+.score-section-head { display: flex; justify-content: space-between; align-items: center; padding: 8px 13px; background: var(--cat-header-bg); border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.6s ease; }
+.s-title { font-size: 10px; font-weight: 500; color: rgba(245,240,232,0.8); letter-spacing: 0.1em; text-transform: uppercase; }
 .s-total { font-family: 'Cormorant Garamond', serif; font-size: 15px; color: var(--cat-brass-lt); transition: color 0.6s ease; }
 
 .crit { padding: 11px 13px; border-bottom: 1px solid var(--border); }
@@ -183,101 +206,92 @@ body { overflow-x: hidden; transition: background 0.6s ease; }
 .crit-name { font-size: 13px; font-weight: 500; color: var(--navy); margin-bottom: 2px; }
 .crit-desc { font-size: 11px; color: var(--ink-faint); margin-bottom: 9px; }
 
-/* ── Score buttons ── */
-.score-btns { display: flex; gap: 4px; flex-wrap: wrap; }
+.score-btns { display: flex; gap: 4px; }
 .score-btn {
   flex: 1;
-  min-width: 0;
-  padding: 11px 3px;
+  padding: 11px 2px;
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-sm);
-  background: var(--ivory);
+  background: #FAFAF7;
   color: var(--ink-muted);
   font-family: 'Cormorant Garamond', serif;
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
   text-align: center;
-  transition: background 0.1s ease, border-color 0.1s ease, color 0.1s ease;
+  transition: background 0.1s, border-color 0.1s, color 0.1s;
   -webkit-tap-highlight-color: transparent;
   line-height: 1;
 }
-.score-btn:active { transform: scale(0.93); }
-.score-btn.selected {
-  background: var(--cat-btn-sel);
-  border-color: var(--cat-btn-sel);
-  color: var(--ivory);
-}
+.score-btn:active { transform: scale(0.91); }
+.score-btn.selected { background: var(--cat-btn-sel); border-color: var(--cat-btn-sel); color: var(--ivory); }
 
-/* ── Sticky score bar ── */
 .sticky-score {
   position: fixed;
   bottom: 0; left: 0; right: 0;
   background: var(--cat-header-bg);
   border-top: 2px solid var(--cat-accent);
-  padding: 10px 18px;
+  padding: 10px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
   z-index: 50;
-  box-shadow: 0 -3px 16px rgba(0,0,0,0.2);
+  box-shadow: 0 -3px 16px rgba(0,0,0,0.25);
   transition: background 0.6s ease, border-color 0.6s ease;
 }
-.sticky-left { display: flex; align-items: baseline; gap: 4px; }
+.sticky-left { display: flex; align-items: baseline; gap: 3px; }
 .sticky-total { font-family: 'Cormorant Garamond', serif; font-size: 32px; color: var(--ivory); line-height: 1; }
-.sticky-denom { font-size: 12px; color: rgba(245,240,232,0.35); }
-.sticky-badge { font-family: 'DM Sans', sans-serif; font-size: 10px; letter-spacing: 0.05em; padding: 2px 8px; border-radius: 20px; margin-left: 6px; }
+.sticky-denom { font-size: 12px; color: rgba(245,240,232,0.3); }
+.sticky-badge { font-size: 10px; padding: 2px 8px; border-radius: 20px; margin-left: 6px; }
 .sticky-mid { flex: 1; text-align: center; }
-.sticky-remaining { font-size: 11px; color: rgba(245,240,232,0.4); line-height: 1.4; }
+.sticky-remaining { font-size: 11px; color: rgba(245,240,232,0.38); line-height: 1.4; }
 .sticky-submit { background: var(--cat-accent); color: var(--ivory); border: none; border-radius: var(--radius-sm); padding: 11px 16px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap; flex-shrink: 0; letter-spacing: 0.02em; transition: opacity 0.15s, background 0.6s ease; }
-.sticky-submit:disabled { opacity: 0.3; cursor: default; }
+.sticky-submit:disabled { opacity: 0.28; cursor: default; }
 .sticky-submit:active:not(:disabled) { opacity: 0.75; }
 
-/* ── Notes ── */
-.notes-wrap { margin-top: 8px; margin-bottom: 10px; }
+.notes-wrap { margin-top: 8px; margin-bottom: 8px; }
 .notes-label { font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 5px; }
-textarea { width: 100%; background: white; border: 1px solid var(--border-strong); border-radius: var(--radius); padding: 10px 13px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--ink); resize: none; min-height: 66px; line-height: 1.5; outline: none; }
+textarea { width: 100%; background: white; border: 1px solid var(--border-strong); border-radius: var(--radius); padding: 10px 13px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--ink); resize: none; min-height: 64px; line-height: 1.5; outline: none; }
 textarea:focus { border-color: var(--cat-accent); }
 textarea::placeholder { color: var(--ink-faint); }
 
 /* ── Done screen ── */
-.done-hero { position: relative; height: 180px; overflow: hidden; flex-shrink: 0; }
-.done-hero img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; filter: grayscale(20%); }
-.done-hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(26,35,64,0.2) 0%, rgba(26,35,64,0.9) 100%); }
+#screen-done { position: relative; }
+.done-bg { position: fixed; inset: 0; z-index: 0; }
+.done-bg img { width: 100%; height: 100%; object-fit: cover; object-position: center center; filter: grayscale(20%); }
+.done-bg-overlay { position: absolute; inset: 0; background: rgba(12,16,28,0.82); }
+.done-content { position: relative; z-index: 1; padding: 60px 24px 40px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; text-align: center; }
+.done-eyebrow { font-size: 10px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--cat-brass-lt); margin-bottom: 16px; }
+.done-title { font-family: 'Cormorant Garamond', serif; font-size: 38px; font-weight: 600; color: var(--ivory); line-height: 1.1; margin-bottom: 8px; }
+.done-sub { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 18px; color: rgba(245,240,232,0.55); margin-bottom: 32px; }
+.done-rule { width: 60px; height: 1px; background: rgba(196,154,78,0.4); margin: 0 auto 28px; }
+.done-msg { font-size: 14px; color: rgba(245,240,232,0.55); line-height: 1.8; }
 
-.center-card { background: white; border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 22px; text-align: center; margin-top: 20px; box-shadow: 0 1px 4px rgba(26,35,64,0.06); }
-.center-card .icon { font-size: 38px; margin-bottom: 12px; }
-.center-card h2 { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 600; color: var(--navy); margin-bottom: 10px; }
-.center-card p { font-size: 13px; color: var(--ink-muted); line-height: 1.7; }
-
-/* ── Toast ── */
-.toast { position: fixed; bottom: 82px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--cat-header-bg); color: var(--ivory); padding: 11px 20px; border-radius: 24px; font-size: 13px; font-weight: 500; white-space: nowrap; transition: transform 0.3s ease; z-index: 100; box-shadow: 0 4px 16px rgba(0,0,0,0.25); border: 1px solid var(--cat-accent); }
+.toast { position: fixed; bottom: 82px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--cat-header-bg); color: var(--ivory); padding: 11px 20px; border-radius: 24px; font-size: 13px; font-weight: 500; white-space: nowrap; transition: transform 0.3s ease; z-index: 100; box-shadow: 0 4px 16px rgba(0,0,0,0.3); border: 1px solid var(--cat-accent); }
 .toast.show { transform: translateX(-50%) translateY(0); }
 </style>
 </head>
 <body>
 
-<!-- SCREEN: Name selection -->
+<!-- SCREEN: Name -->
 <div class="screen active" id="screen-name">
-  <div class="app-header">
-    <div class="eyebrow">50th Anniversary · Paris 1976</div>
-    <h1>Judgement of Paris</h1>
-    <div class="sub">A blind tasting in honour of Steven Spurrier</div>
-  </div>
-  <div class="welcome-hero">
+  <div class="name-bg">
     <img src="spurrier.jpg" alt="Steven Spurrier" />
-    <div class="welcome-hero-overlay"></div>
-    <div class="welcome-hero-text">
-      <div class="quote">"I wanted to show that the best wines of California could stand alongside the best of France."</div>
-      <div class="attribution">Steven Spurrier · Paris, 24 May 1976</div>
-    </div>
+    <div class="name-bg-overlay"></div>
   </div>
-  <div class="content">
-    <div class="welcome-title">Who are you?</div>
-    <p class="welcome-sub">Select your name to begin. Your scores will be saved throughout the evening.</p>
-    <div class="name-grid" id="name-grid"><div style="grid-column:1/-1;font-size:13px;color:#9C8870;padding:8px 0">Connecting…</div></div>
-    <button class="btn-primary" id="confirm-name-btn" disabled>Begin tasting</button>
+  <div class="name-content">
+    <div class="name-top">
+      <div class="name-eyebrow">24 May 1976 · Paris · 50th Anniversary</div>
+      <div class="name-title">Judgement<br>of Paris</div>
+      <div class="name-tagline">France versus California.<br>Nothing was ever the same again.</div>
+      <div class="name-rule"></div>
+      <div class="name-prompt">Who are you?</div>
+      <div class="name-grid" id="name-grid">
+        <div style="grid-column:1/-1;font-size:13px;color:rgba(245,240,232,0.4);padding:8px 0">Connecting…</div>
+      </div>
+      <button class="btn-begin" id="confirm-name-btn" disabled>Begin tasting</button>
+    </div>
   </div>
 </div>
 
@@ -295,7 +309,7 @@ textarea::placeholder { color: var(--ink-faint); }
     <div class="sticky-left">
       <span class="sticky-total" id="sticky-total">—</span>
       <span class="sticky-denom">/20</span>
-      <span class="sticky-badge" id="sticky-badge" style="background:rgba(0,0,0,0.3);color:rgba(245,240,232,0.5)">—</span>
+      <span class="sticky-badge" id="sticky-badge" style="background:rgba(0,0,0,0.3);color:rgba(245,240,232,0.4)">—</span>
     </div>
     <div class="sticky-mid">
       <div class="sticky-remaining" id="sticky-remaining">Score all criteria to submit</div>
@@ -304,22 +318,18 @@ textarea::placeholder { color: var(--ink-faint); }
   </div>
 </div>
 
-<!-- SCREEN: All done -->
+<!-- SCREEN: Done -->
 <div class="screen" id="screen-done">
-  <div class="app-header">
-    <div class="eyebrow">50th Anniversary · Paris 1976</div>
-    <h1>Judgement of Paris</h1>
-  </div>
-  <div class="done-hero">
+  <div class="done-bg">
     <img src="spurrier.jpg" alt="Steven Spurrier" />
-    <div class="done-hero-overlay"></div>
+    <div class="done-bg-overlay"></div>
   </div>
-  <div class="content">
-    <div class="center-card">
-      <div class="icon">🍷</div>
-      <h2>All wines scored</h2>
-      <p>You have submitted scores for all 16 wines.<br><br>The results will be revealed at the end of the evening.<br><br>Sit back and enjoy the debate.</p>
-    </div>
+  <div class="done-content">
+    <div class="done-eyebrow">Judgement of Paris · 50th Anniversary</div>
+    <div class="done-title">All done.</div>
+    <div class="done-sub">The jury has spoken.</div>
+    <div class="done-rule"></div>
+    <div class="done-msg">Sit back. The verdict will be read at the end of the evening.</div>
   </div>
 </div>
 
@@ -343,271 +353,235 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 const TASTERS = ['Amar','Elk','Jonathan','Ewan','ClapeYourHands','Narmstro','JH','Tom'];
-
 const WINES = [
-  {id:'S1', label:'Sparkling 1', category:'Sparkling', catClass:'cat-sparkling', icon:'✦'},
-  {id:'S2', label:'Sparkling 2', category:'Sparkling', catClass:'cat-sparkling', icon:'✦'},
-  {id:'W1', label:'White 1', category:'White', catClass:'cat-white', icon:'◈'},
-  {id:'W2', label:'White 2', category:'White', catClass:'cat-white', icon:'◈'},
-  {id:'W3', label:'White 3', category:'White', catClass:'cat-white', icon:'◈'},
-  {id:'W4', label:'White 4', category:'White', catClass:'cat-white', icon:'◈'},
-  {id:'W5', label:'White 5', category:'White', catClass:'cat-white', icon:'◈'},
-  {id:'W6', label:'White 6', category:'White', catClass:'cat-white', icon:'◈'},
-  {id:'R1', label:'Red 1', category:'Red', catClass:'cat-red', icon:'◆'},
-  {id:'R2', label:'Red 2', category:'Red', catClass:'cat-red', icon:'◆'},
-  {id:'R3', label:'Red 3', category:'Red', catClass:'cat-red', icon:'◆'},
-  {id:'R4', label:'Red 4', category:'Red', catClass:'cat-red', icon:'◆'},
-  {id:'R5', label:'Red 5', category:'Red', catClass:'cat-red', icon:'◆'},
-  {id:'R6', label:'Red 6', category:'Red', catClass:'cat-red', icon:'◆'},
-  {id:'Sw1', label:'Sweet 1', category:'Sweet', catClass:'cat-sweet', icon:'❋'},
-  {id:'Sw2', label:'Sweet 2', category:'Sweet', catClass:'cat-sweet', icon:'❋'},
+  {id:'S1',label:'Sparkling 1',category:'Sparkling',catClass:'cat-sparkling',icon:'✦'},
+  {id:'S2',label:'Sparkling 2',category:'Sparkling',catClass:'cat-sparkling',icon:'✦'},
+  {id:'W1',label:'White 1',category:'White',catClass:'cat-white',icon:'◈'},
+  {id:'W2',label:'White 2',category:'White',catClass:'cat-white',icon:'◈'},
+  {id:'W3',label:'White 3',category:'White',catClass:'cat-white',icon:'◈'},
+  {id:'W4',label:'White 4',category:'White',catClass:'cat-white',icon:'◈'},
+  {id:'W5',label:'White 5',category:'White',catClass:'cat-white',icon:'◈'},
+  {id:'W6',label:'White 6',category:'White',catClass:'cat-white',icon:'◈'},
+  {id:'R1',label:'Red 1',category:'Red',catClass:'cat-red',icon:'◆'},
+  {id:'R2',label:'Red 2',category:'Red',catClass:'cat-red',icon:'◆'},
+  {id:'R3',label:'Red 3',category:'Red',catClass:'cat-red',icon:'◆'},
+  {id:'R4',label:'Red 4',category:'Red',catClass:'cat-red',icon:'◆'},
+  {id:'R5',label:'Red 5',category:'Red',catClass:'cat-red',icon:'◆'},
+  {id:'R6',label:'Red 6',category:'Red',catClass:'cat-red',icon:'◆'},
+  {id:'Sw1',label:'Sweet 1',category:'Sweet',catClass:'cat-sweet',icon:'❋'},
+  {id:'Sw2',label:'Sweet 2',category:'Sweet',catClass:'cat-sweet',icon:'❋'},
 ];
 
 const CRITERIA = [
-  { section:'Appearance', max:2, items:[
-    {key:'appearance_clarity', name:'Clarity, colour & hue', desc:'Brilliance, depth, correctness for type', max:2}
+  {section:'Appearance',max:2,items:[
+    {key:'appearance_clarity',name:'Clarity, colour & hue',desc:'Brilliance, depth, correctness for type',max:2}
   ]},
-  { section:'Nose', max:4, items:[
-    {key:'nose_intensity', name:'Intensity', desc:'Strength of aromatic expression', max:2},
-    {key:'nose_character', name:'Character & complexity', desc:'Typicity, layers, primary/secondary/tertiary', max:2}
+  {section:'Nose',max:4,items:[
+    {key:'nose_intensity',name:'Intensity',desc:'Strength of aromatic expression',max:2},
+    {key:'nose_character',name:'Character & complexity',desc:'Typicity, layers, primary/secondary/tertiary',max:2}
   ]},
-  { section:'Palate', max:10, items:[
-    {key:'palate_structure', name:'Structure', desc:'Acidity, tannin, alcohol — balance & integration', max:2.5},
-    {key:'palate_fruit', name:'Fruit expression', desc:'Intensity, character, typicity of fruit', max:2.5},
-    {key:'palate_texture', name:'Texture & body', desc:'Mouthfeel, density, mid-palate weight', max:2.5},
-    {key:'palate_finish', name:'Finish', desc:'Length, quality, persistence of aftertaste', max:2.5}
+  {section:'Palate',max:10,items:[
+    {key:'palate_structure',name:'Structure',desc:'Acidity, tannin, alcohol — balance & integration',max:2.5},
+    {key:'palate_fruit',name:'Fruit expression',desc:'Intensity, character, typicity of fruit',max:2.5},
+    {key:'palate_texture',name:'Texture & body',desc:'Mouthfeel, density, mid-palate weight',max:2.5},
+    {key:'palate_finish',name:'Finish',desc:'Length, quality, persistence of aftertaste',max:2.5}
   ]},
-  { section:'Overall quality & harmony', max:4, items:[
-    {key:'overall_balance', name:'Balance & integration', desc:'Do all elements cohere as a whole?', max:2},
-    {key:'overall_impression', name:'Overall impression', desc:'Distinction, memorability, your gut response', max:2}
+  {section:'Overall quality & harmony',max:4,items:[
+    {key:'overall_balance',name:'Balance & integration',desc:'Do all elements cohere as a whole?',max:2},
+    {key:'overall_impression',name:'Overall impression',desc:'Distinction, memorability, your gut response',max:2}
   ]}
 ];
 
-function getSteps(max) {
-  const steps = [];
-  for (let v = 0; v <= max; v += 0.5) steps.push(Math.round(v * 10) / 10);
-  return steps;
+function getSteps(max){const s=[];for(let v=0;v<=max;v+=0.5)s.push(Math.round(v*10)/10);return s;}
+
+let currentTaster=localStorage.getItem('jop50_taster')||null;
+let currentWineIdx=0;
+let submittedWines={};
+let scoreValues={};
+
+function fmt(n){const r=Math.round(n*2)/2;return r%1===0?r.toString():r.toFixed(1);}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
 }
 
-let currentTaster = localStorage.getItem('jop50_taster') || null;
-let currentWineIdx = 0;
-let submittedWines = {};
-let scoreValues = {};
-
-function fmt(n) {
-  const r = Math.round(n * 2) / 2;
-  return r % 1 === 0 ? r.toString() : r.toFixed(1);
-}
-
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2800);
-}
-
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
 
-function applyCategoryTheme(wine) {
-  document.body.className = wine ? wine.catClass : '';
+function applyCat(wine){
+  document.body.className=wine?wine.catClass:'';
 }
 
-function buildNameGrid(takenNames) {
-  const grid = document.getElementById('name-grid');
-  grid.innerHTML = '';
-  let selectedName = null;
-  TASTERS.forEach(name => {
-    const taken = takenNames[name] === true && name !== currentTaster;
-    const btn = document.createElement('button');
-    btn.className = 'name-btn' + (taken ? ' taken' : '');
-    btn.innerHTML = name + (taken ? '<span class="taken-label">seated — tap to reclaim</span>' : '');
-    btn.onclick = () => {
-      document.querySelectorAll('.name-btn').forEach(b => b.classList.remove('selected'));
-      btn.classList.add('selected');
-      selectedName = name;
-      document.getElementById('confirm-name-btn').disabled = false;
+function buildNameGrid(takenNames){
+  const grid=document.getElementById('name-grid');
+  grid.innerHTML='';
+  let sel=null;
+  TASTERS.forEach(name=>{
+    const taken=takenNames[name]===true&&name!==currentTaster;
+    const btn=document.createElement('button');
+    btn.className='name-btn'+(taken?' taken':'');
+    btn.innerHTML=name+(taken?'<span class="taken-label">seated — tap to reclaim</span>':'');
+    btn.onclick=()=>{
+      document.querySelectorAll('.name-btn').forEach(b=>b.classList.remove('selected'));
+      btn.classList.add('selected');sel=name;
+      document.getElementById('confirm-name-btn').disabled=false;
     };
     grid.appendChild(btn);
   });
-  document.getElementById('confirm-name-btn').onclick = async () => {
-    if (!selectedName) return;
-    currentTaster = selectedName;
-    localStorage.setItem('jop50_taster', currentTaster);
-    await set(ref(db, 'tasters/' + currentTaster), true);
+  document.getElementById('confirm-name-btn').onclick=async()=>{
+    if(!sel)return;
+    currentTaster=sel;
+    localStorage.setItem('jop50_taster',currentTaster);
+    await set(ref(db,'tasters/'+currentTaster),true);
     await initScoringScreen();
   };
 }
 
-async function initScoringScreen() {
-  const snap = await get(ref(db, 'scores/' + currentTaster));
-  submittedWines = snap.val() || {};
-  currentWineIdx = WINES.findIndex(w => !submittedWines[w.id]);
-  if (currentWineIdx === -1) { showScreen('screen-done'); return; }
-  document.getElementById('header-taster-name').textContent = currentTaster;
-  applyCategoryTheme(WINES[currentWineIdx]);
-  renderWineNav();
-  renderScorecard(currentWineIdx);
+async function initScoringScreen(){
+  const snap=await get(ref(db,'scores/'+currentTaster));
+  submittedWines=snap.val()||{};
+  currentWineIdx=WINES.findIndex(w=>!submittedWines[w.id]);
+  if(currentWineIdx===-1){showScreen('screen-done');return;}
+  document.getElementById('header-taster-name').textContent=currentTaster;
+  applyCat(WINES[currentWineIdx]);
+  renderWineNav();renderScorecard(currentWineIdx);
   showScreen('screen-scoring');
 }
 
-function renderWineNav() {
-  const nav = document.getElementById('wine-nav');
-  nav.innerHTML = '';
-  WINES.forEach((w, i) => {
-    const pill = document.createElement('div');
-    pill.className = 'wine-pill' + (submittedWines[w.id] ? ' done' : '') + (i === currentWineIdx ? ' current' : '');
-    pill.textContent = w.label;
-    nav.appendChild(pill);
+function renderWineNav(){
+  const nav=document.getElementById('wine-nav');
+  nav.innerHTML='';
+  WINES.forEach((w,i)=>{
+    const pill=document.createElement('div');
+    pill.className='wine-pill'+(submittedWines[w.id]?' done':'')+(i===currentWineIdx?' current':'');
+    pill.textContent=w.label;nav.appendChild(pill);
   });
-  setTimeout(() => {
-    const pills = nav.querySelectorAll('.wine-pill');
-    if (pills[currentWineIdx]) pills[currentWineIdx].scrollIntoView({behavior:'smooth', block:'nearest', inline:'center'});
-  }, 50);
+  setTimeout(()=>{
+    const pills=nav.querySelectorAll('.wine-pill');
+    if(pills[currentWineIdx])pills[currentWineIdx].scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+  },50);
 }
 
-function renderScorecard(idx) {
-  const wine = WINES[idx];
-  document.getElementById('header-wine-name').textContent = wine.label;
-  document.getElementById('scoring-eyebrow').textContent = wine.category + ' · Judgement of Paris';
-  document.getElementById('progress-fill').style.width = (Object.keys(submittedWines).length / 16 * 100) + '%';
-  applyCategoryTheme(wine);
+function renderScorecard(idx){
+  const wine=WINES[idx];
+  document.getElementById('header-wine-name').textContent=wine.label;
+  document.getElementById('scoring-eyebrow').textContent=wine.category+' · Judgement of Paris';
+  document.getElementById('progress-fill').style.width=(Object.keys(submittedWines).length/16*100)+'%';
+  applyCat(wine);
+  scoreValues={};
+  CRITERIA.forEach(sec=>sec.items.forEach(item=>scoreValues[item.key]=null));
 
-  scoreValues = {};
-  CRITERIA.forEach(sec => sec.items.forEach(item => scoreValues[item.key] = null));
-
-  const content = document.getElementById('scoring-content');
-  let html = `<div class="cat-banner">
-    <div>
-      <div class="cat-banner-label">${wine.category}</div>
-      <div class="cat-banner-name">${wine.label}</div>
-    </div>
+  const content=document.getElementById('scoring-content');
+  let html=`<div class="cat-banner">
+    <div><div class="cat-banner-label">${wine.category}</div><div class="cat-banner-name">${wine.label}</div></div>
     <div class="cat-banner-icon">${wine.icon}</div>
   </div>`;
 
-  CRITERIA.forEach(sec => {
-    const secKey = sec.section.replace(/[^a-z]/gi,'').toLowerCase();
-    html += `<div class="score-section">
+  CRITERIA.forEach(sec=>{
+    const sk=sec.section.replace(/[^a-z]/gi,'').toLowerCase();
+    html+=`<div class="score-section">
       <div class="score-section-head">
         <span class="s-title">${sec.section}</span>
-        <span class="s-total"><span id="sec-${secKey}-total">—</span> / ${sec.max}</span>
+        <span class="s-total"><span id="sec-${sk}-total">—</span> / ${sec.max}</span>
       </div>`;
-    sec.items.forEach(item => {
-      html += `<div class="crit">
+    sec.items.forEach(item=>{
+      html+=`<div class="crit">
         <div class="crit-name">${item.name}</div>
         <div class="crit-desc">${item.desc}</div>
         <div class="score-btns" id="btns-${item.key}">`;
-      getSteps(item.max).forEach(v => {
-        html += `<button class="score-btn" onclick="window.selectScore('${item.key}',${v},this)">${fmt(v)}</button>`;
+      getSteps(item.max).forEach(v=>{
+        html+=`<button class="score-btn" onclick="window.selectScore('${item.key}',${v},this)">${fmt(v)}</button>`;
       });
-      html += `</div></div>`;
+      html+=`</div></div>`;
     });
-    html += '</div>';
+    html+='</div>';
   });
 
-  html += `<div class="notes-wrap">
+  html+=`<div class="notes-wrap">
     <div class="notes-label">Tasting notes</div>
     <textarea id="tasting-notes" placeholder="Aromas, palate impressions, faults…" rows="3"></textarea>
   </div><div style="height:8px"></div>`;
 
-  content.innerHTML = html;
+  content.innerHTML=html;
   updateStickyBar();
 }
 
-window.selectScore = function(key, val, btn) {
-  scoreValues[key] = val;
-  document.getElementById('btns-' + key).querySelectorAll('.score-btn').forEach(b => b.classList.remove('selected'));
+window.selectScore=function(key,val,btn){
+  scoreValues[key]=val;
+  document.getElementById('btns-'+key).querySelectorAll('.score-btn').forEach(b=>b.classList.remove('selected'));
   btn.classList.add('selected');
-  updateSectionTotal(key);
-  updateStickyBar();
+  updateSectionTotal(key);updateStickyBar();
 };
 
-function getSectionForKey(key) {
-  for (const sec of CRITERIA) for (const item of sec.items) if (item.key === key) return sec;
+function getSectionForKey(key){
+  for(const sec of CRITERIA)for(const item of sec.items)if(item.key===key)return sec;
 }
 
-function updateSectionTotal(key) {
-  const sec = getSectionForKey(key);
-  if (!sec) return;
-  const el = document.getElementById('sec-' + sec.section.replace(/[^a-z]/gi,'').toLowerCase() + '-total');
-  if (!el) return;
-  const allScored = sec.items.every(item => scoreValues[item.key] !== null);
-  if (allScored) {
-    el.textContent = fmt(Math.round(sec.items.reduce((a, item) => a + scoreValues[item.key], 0) * 2) / 2);
-  } else {
-    el.textContent = '—';
+function updateSectionTotal(key){
+  const sec=getSectionForKey(key);if(!sec)return;
+  const el=document.getElementById('sec-'+sec.section.replace(/[^a-z]/gi,'').toLowerCase()+'-total');
+  if(!el)return;
+  const done=sec.items.every(i=>scoreValues[i.key]!==null);
+  el.textContent=done?fmt(Math.round(sec.items.reduce((a,i)=>a+scoreValues[i.key],0)*2)/2):'—';
+}
+
+function updateStickyBar(){
+  const allKeys=CRITERIA.flatMap(sec=>sec.items.map(i=>i.key));
+  const unscored=allKeys.filter(k=>scoreValues[k]===null);
+  const scoredKeys=allKeys.filter(k=>scoreValues[k]!==null);
+  const totalEl=document.getElementById('sticky-total');
+  const badgeEl=document.getElementById('sticky-badge');
+  const remainEl=document.getElementById('sticky-remaining');
+  const submitBtn=document.getElementById('sticky-submit-btn');
+
+  totalEl.textContent=scoredKeys.length>0?fmt(Math.round(scoredKeys.reduce((a,k)=>a+scoreValues[k],0)*2)/2):'—';
+
+  if(unscored.length===0){
+    const grand=Math.round(allKeys.reduce((a,k)=>a+scoreValues[k],0)*2)/2;
+    let lbl,bg,col;
+    if(grand>=18.5){lbl='Exceptional';bg='rgba(0,0,0,0.45)';col='#D4AF6A';}
+    else if(grand>=17){lbl='Outstanding';bg='rgba(0,0,0,0.4)';col='#D4AF6A';}
+    else if(grand>=15.5){lbl='Very good';bg='rgba(0,0,0,0.35)';col='#D4AF6A';}
+    else if(grand>=14){lbl='Good';bg='rgba(0,0,0,0.3)';col='#C49A4E';}
+    else if(grand>=12){lbl='Acceptable';bg='rgba(0,0,0,0.25)';col='#A07B3A';}
+    else{lbl='Below standard';bg='rgba(0,0,0,0.2)';col='#9C8870';}
+    badgeEl.textContent=lbl;badgeEl.style.background=bg;badgeEl.style.color=col;
+    remainEl.textContent='Ready to submit';submitBtn.disabled=false;
+  }else{
+    badgeEl.textContent='—';badgeEl.style.background='rgba(0,0,0,0.3)';badgeEl.style.color='rgba(245,240,232,0.35)';
+    remainEl.textContent=unscored.length+' criteria left';submitBtn.disabled=true;
   }
 }
 
-function updateStickyBar() {
-  const allKeys = CRITERIA.flatMap(sec => sec.items.map(i => i.key));
-  const unscored = allKeys.filter(k => scoreValues[k] === null);
-  const scoredKeys = allKeys.filter(k => scoreValues[k] !== null);
-
-  const totalEl = document.getElementById('sticky-total');
-  const badgeEl = document.getElementById('sticky-badge');
-  const remainEl = document.getElementById('sticky-remaining');
-  const submitBtn = document.getElementById('sticky-submit-btn');
-
-  totalEl.textContent = scoredKeys.length > 0
-    ? fmt(Math.round(scoredKeys.reduce((a, k) => a + scoreValues[k], 0) * 2) / 2)
-    : '—';
-
-  if (unscored.length === 0) {
-    const grand = Math.round(allKeys.reduce((a, k) => a + scoreValues[k], 0) * 2) / 2;
-    let lbl, bg, col;
-    if (grand >= 18.5) { lbl='Exceptional';    bg='rgba(0,0,0,0.4)'; col='#D4AF6A'; }
-    else if (grand >= 17)  { lbl='Outstanding';   bg='rgba(0,0,0,0.35)'; col='#D4AF6A'; }
-    else if (grand >= 15.5){ lbl='Very good';     bg='rgba(0,0,0,0.3)';  col='#D4AF6A'; }
-    else if (grand >= 14)  { lbl='Good';          bg='rgba(0,0,0,0.25)'; col='#C49A4E'; }
-    else if (grand >= 12)  { lbl='Acceptable';    bg='rgba(0,0,0,0.2)';  col='#A07B3A'; }
-    else                   { lbl='Below standard';bg='rgba(0,0,0,0.2)';  col='#9C8870'; }
-    badgeEl.textContent = lbl; badgeEl.style.background = bg; badgeEl.style.color = col;
-    remainEl.textContent = 'Ready to submit';
-    submitBtn.disabled = false;
-  } else {
-    badgeEl.textContent = '—'; badgeEl.style.background = 'rgba(0,0,0,0.3)'; badgeEl.style.color = 'rgba(245,240,232,0.4)';
-    remainEl.textContent = unscored.length + ' criteria left';
-    submitBtn.disabled = true;
-  }
-}
-
-window.submitWine = async function() {
-  const wine = WINES[currentWineIdx];
-  const allKeys = CRITERIA.flatMap(sec => sec.items.map(i => i.key));
-  if (allKeys.some(k => scoreValues[k] === null)) return;
-  const grand = Math.round(allKeys.reduce((a, k) => a + scoreValues[k], 0) * 2) / 2;
-  const entry = {
-    taster: currentTaster, wine: wine.id, label: wine.label,
-    scores: {...scoreValues}, total: grand,
-    notes: document.getElementById('tasting-notes').value,
-    timestamp: Date.now()
-  };
-  await set(ref(db, 'scores/' + currentTaster + '/' + wine.id), entry);
-  submittedWines[wine.id] = entry;
-  showToast(wine.label + ' — ' + fmt(grand) + ' / 20');
-
-  const nextIdx = WINES.findIndex((w, i) => i > currentWineIdx && !submittedWines[w.id]);
-  if (nextIdx === -1) { showScreen('screen-done'); return; }
-  currentWineIdx = nextIdx;
-  applyCategoryTheme(WINES[nextIdx]);
-  renderWineNav();
-  renderScorecard(currentWineIdx);
-  document.getElementById('scoring-content').scrollTop = 0;
-  window.scrollTo(0, 0);
+window.submitWine=async function(){
+  const wine=WINES[currentWineIdx];
+  const allKeys=CRITERIA.flatMap(sec=>sec.items.map(i=>i.key));
+  if(allKeys.some(k=>scoreValues[k]===null))return;
+  const grand=Math.round(allKeys.reduce((a,k)=>a+scoreValues[k],0)*2)/2;
+  const entry={taster:currentTaster,wine:wine.id,label:wine.label,scores:{...scoreValues},total:grand,notes:document.getElementById('tasting-notes').value,timestamp:Date.now()};
+  await set(ref(db,'scores/'+currentTaster+'/'+wine.id),entry);
+  submittedWines[wine.id]=entry;
+  showToast(wine.label+' — '+fmt(grand)+' / 20');
+  const nextIdx=WINES.findIndex((w,i)=>i>currentWineIdx&&!submittedWines[w.id]);
+  if(nextIdx===-1){showScreen('screen-done');return;}
+  currentWineIdx=nextIdx;
+  applyCat(WINES[nextIdx]);
+  renderWineNav();renderScorecard(currentWineIdx);
+  document.getElementById('scoring-content').scrollTop=0;window.scrollTo(0,0);
 };
 
-async function init() {
-  if (currentTaster) {
-    const snap = await get(ref(db, 'tasters/' + currentTaster));
-    if (snap.val()) { await initScoringScreen(); return; }
-    localStorage.removeItem('jop50_taster');
-    currentTaster = null;
+async function init(){
+  if(currentTaster){
+    const snap=await get(ref(db,'tasters/'+currentTaster));
+    if(snap.val()){await initScoringScreen();return;}
+    localStorage.removeItem('jop50_taster');currentTaster=null;
   }
-  const snap = await get(ref(db, 'tasters'));
-  buildNameGrid(snap.val() || {});
+  const snap=await get(ref(db,'tasters'));
+  buildNameGrid(snap.val()||{});
 }
 
 init();
