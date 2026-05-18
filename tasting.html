@@ -370,6 +370,8 @@ const WINES = [
   {id:'R6',label:'Red 6',category:'Red',catClass:'cat-red',icon:'◆'},
   {id:'Sw1',label:'Sweet 1',category:'Sweet',catClass:'cat-sweet',icon:'❋'},
   {id:'Sw2',label:'Sweet 2',category:'Sweet',catClass:'cat-sweet',icon:'❋'},
+  {id:'Sw3',label:'Sweet 3',category:'Sweet',catClass:'cat-sweet',icon:'❋'},
+  {id:'Sw4',label:'Sweet 4',category:'Sweet',catClass:'cat-sweet',icon:'❋'},
 ];
 
 const CRITERIA = [
@@ -470,7 +472,7 @@ function renderScorecard(idx){
   const wine=WINES[idx];
   document.getElementById('header-wine-name').textContent=wine.label;
   document.getElementById('scoring-eyebrow').textContent=wine.category+' · Judgement of Paris';
-  document.getElementById('progress-fill').style.width=(Object.keys(submittedWines).length/16*100)+'%';
+  document.getElementById('progress-fill').style.width=(Object.keys(submittedWines).length/18*100)+'%';
   applyCat(wine);
   scoreValues={};
   CRITERIA.forEach(sec=>sec.items.forEach(item=>scoreValues[item.key]=null));

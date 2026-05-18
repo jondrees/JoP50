@@ -259,9 +259,24 @@ input[type=text]:focus { border-color: var(--gold); background: white; }
 .tag-california { background: #FFF3E0; color: #9C5700; }
 .tag-bordeaux { background: #FCE8E8; color: #8B1A1A; }
 .tag-champagne { background: #FFFDE7; color: #8B7A00; }
+.tag-south { background: #E8F5E9; color: #1B5E20; }
 .tag-other { background: #EEF2F5; color: #3A4F5C; }
 
 .empty-state { padding: 32px; text-align: center; color: var(--ink-faint); font-size: 13px; }
+
+/* Winners panel */
+.winners-title { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 10px; }
+.winner-cat-block { background: white; border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 10px; overflow: hidden; }
+.winner-cat-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); padding: 8px 14px; background: var(--parchment); border-bottom: 1px solid var(--border); }
+.winner-row { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+.winner-row:last-child { border-bottom: none; }
+.winner-row-top { background: rgba(184,147,63,0.06); }
+.winner-row-empty { padding: 10px 14px; font-size: 12px; color: var(--ink-faint); }
+.winner-flag { font-size: 22px; flex-shrink: 0; }
+.winner-info { flex: 1; }
+.winner-name { font-size: 13px; font-weight: 500; color: var(--ink); }
+.winner-country { font-size: 11px; color: var(--ink-faint); margin-top: 1px; }
+.winner-score { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 500; color: var(--ink); text-align: right; }
 </style>
 </head>
 <body>
@@ -291,6 +306,7 @@ input[type=text]:focus { border-color: var(--gold); background: white; }
     <div>#</div><div>Wine</div><div style="text-align:center">Tasters</div><div style="text-align:right">Mean</div><div></div>
   </div>
   <div id="leaderboard"></div>
+  <div id="winners-panel" style="margin-top:20px"></div>
 </div>
 
 <div class="page" id="page-detail">
@@ -338,9 +354,11 @@ const WINES = [
   {id:'R6',label:'Red 6',category:'Red'},
   {id:'Sw1',label:'Sweet 1',category:'Sweet'},
   {id:'Sw2',label:'Sweet 2',category:'Sweet'},
+  {id:'Sw3',label:'Sweet 3',category:'Sweet'},
+  {id:'Sw4',label:'Sweet 4',category:'Sweet'},
 ];
 
-const ORIGINS = ['Burgundy','California','Bordeaux','Champagne','Other'];
+const ORIGINS = ['Burgundy','California','Bordeaux','Champagne','South Africa','Other'];
 
 let allScores = {};
 let wineInfo = {};
@@ -428,7 +446,115 @@ function renderSummary() {
     </div>`;
   });
   document.getElementById('leaderboard').innerHTML = html;
+
+  // ---- Winners panel ----
+  renderWinners(byWine);
 }
+
+function countryGroup(origin) {
+  if (!origin) return null;
+  const o = origin.toLowerCase();
+  if (o === 'burgundy' || o === 'bordeaux' || o === 'champagne') return 'France';
+  if (o === 'california') return 'USA';
+  if (o === 'south africa') return 'South Africa';
+  return 'Other';
+}
+
+function renderWinners(byWine) {
+  const el = document.getElementById('winners-panel');
+  if (!el) return;
+
+  const categories = ['Sparkling','White','Red','Sweet'];
+  const catWines = {};
+  categories.forEach(c => catWines[c] = []);
+  WINES.forEach(w => {
+    const agg = byWine[w.id];
+    if (!agg || agg.entries.length === 0) return;
+    const info = wineInfo[w.id] || {};
+    const mean = agg.total / agg.entries.length;
+    catWines[w.category].push({ wine: w, mean, info });
+  });
+
+  // Check if any origin data exists
+  const hasOrigins = WINES.some(w => wineInfo[w.id] && wineInfo[w.id].origin);
+  if (!hasOrigins) {
+    el.innerHTML = '<div class="empty-state" style="font-size:12px">Assign origins in the Wines tab to see category and overall winners.</div>';
+    return;
+  }
+
+  let html = '';
+
+  // Category winners
+  html += '<div class="winners-title">Category winners</div>';
+  categories.forEach(cat => {
+    const wines = catWines[cat];
+    if (wines.length === 0) return;
+
+    // Group by country
+    const byCountry = {};
+    wines.forEach(w => {
+      const country = countryGroup(w.info.origin);
+      if (!country || country === 'Other') return;
+      if (!byCountry[country] || w.mean > byCountry[country].mean) byCountry[country] = w;
+    });
+
+    html += `<div class="winner-cat-block">
+      <div class="winner-cat-label">${cat}</div>`;
+
+    if (Object.keys(byCountry).length === 0) {
+      html += '<div class="winner-row-empty">Assign origins to see winners</div>';
+    } else {
+      Object.entries(byCountry).sort((a,b) => b[1].mean - a[1].mean).forEach(([country, w]) => {
+        const flag = country === 'France' ? '🇫🇷' : country === 'USA' ? '🇺🇸' : country === 'South Africa' ? '🇿🇦' : '🌍';
+        const bottle = w.info.bottle || w.wine.label;
+        html += `<div class="winner-row">
+          <span class="winner-flag">${flag}</span>
+          <div class="winner-info">
+            <div class="winner-name">${bottle}</div>
+            <div class="winner-country">${country}</div>
+          </div>
+          <div class="winner-score">${fmt(w.mean)}</div>
+        </div>`;
+      });
+    }
+    html += '</div>';
+  });
+
+  // Overall winner — White + Red only
+  html += '<div class="winners-title" style="margin-top:18px">Overall winner <span style="font-weight:400;font-size:11px;color:var(--ink-faint)">(Whites & Reds · original format)</span></div>';
+  const whiteRed = [...catWines['White'], ...catWines['Red']];
+  const overallByCountry = {};
+  whiteRed.forEach(w => {
+    const country = countryGroup(w.info.origin);
+    if (!country || country === 'Other') return;
+    if (!overallByCountry[country]) overallByCountry[country] = { total: 0, count: 0, wines: [] };
+    overallByCountry[country].total += w.mean;
+    overallByCountry[country].count++;
+    overallByCountry[country].wines.push(w);
+  });
+
+  if (Object.keys(overallByCountry).length === 0) {
+    html += '<div class="winner-row-empty">Assign origins to Whites and Reds to see overall winner</div>';
+  } else {
+    const ranked = Object.entries(overallByCountry)
+      .map(([country, d]) => ({ country, avg: d.total / d.count, wines: d.wines }))
+      .sort((a,b) => b.avg - a.avg);
+
+    ranked.forEach((r, i) => {
+      const flag = r.country === 'France' ? '🇫🇷' : r.country === 'USA' ? '🇺🇸' : '🌍';
+      const topWine = r.wines.sort((a,b) => b.mean - a.mean)[0];
+      html += `<div class="winner-row ${i===0?'winner-row-top':''}">
+        <span class="winner-flag">${flag}</span>
+        <div class="winner-info">
+          <div class="winner-name">${r.country} ${i===0?'🏆':''}</div>
+          <div class="winner-country">Best: ${topWine.info.bottle||topWine.wine.label} · ${fmt(topWine.mean)}</div>
+        </div>
+        <div class="winner-score">${fmt(r.avg)}<span style="font-size:10px;color:var(--ink-faint)"> avg</span></div>
+      </div>`;
+    });
+  }
+
+  el.innerHTML = html;
 
 function renderDetail() {
   const byWine = aggregateWines();
